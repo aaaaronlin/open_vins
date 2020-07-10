@@ -19,6 +19,7 @@ Please take a look at the feature list below for full details on what the system
 
 ## News / Events
 
+* **July 7, 2020** - Released zero velocity update for vehicle applications and direct initialization when standing still. See [PR#79](https://github.com/rpng/open_vins/pull/79) for details. 
 * **May 18, 2020** - Released secondary pose graph example repository [ov_secondary](https://github.com/rpng/ov_secondary) based on [VINS-Fusion](https://github.com/HKUST-Aerial-Robotics/VINS-Fusion). OpenVINS now publishes marginalized feature track, feature 3d position, and first camera intrinsics and extrinsics. See [PR#66](https://github.com/rpng/open_vins/pull/66) for details and discussion.
 * **April 3, 2020** - Released [v2.0](https://github.com/rpng/open_vins/releases/tag/v2.0) update to the codebase with some key refactoring, ros-free building, improved dataset support, and single inverse depth feature representation. Please check out the [release page](https://github.com/rpng/open_vins/releases/tag/v2.0) for details.
 * **January 21, 2020** - Our paper has been accepted for presentation in [ICRA 2020](https://www.icra2020.org/). We look forward to seeing everybody there! We have also added links to a few videos of the system running on different datasets.
@@ -61,6 +62,7 @@ Please take a look at the feature list below for full details on what the system
     * Binocular camera
     * KLT or descriptor based
 * Static IMU initialization (sfm will be open sourced later)
+* Zero velocity detection and updates
 * Out of the box evaluation on EurocMav and TUM-VI datasets
 * Extensive evaluation suite (ATE, RPE, NEES, RMSE, etc..)
 
@@ -74,7 +76,7 @@ This is a modification of the code originally developed by the HKUST aerial robo
 Here we stress that this is a loosely coupled method, thus no information is returned to the estimator to improve the underlying OpenVINS odometry.
 This codebase has been modified in a few key areas including: exposing more loop closure parameters, subscribing to camera intrinsics, simplifying configuration such that only topics need to be supplied, and some tweaks to the loop closure detection to improve frequency.
 
-* **[ov_maplab](https://github.com/rpng/ov_maplab)** - 
+* **[ov_maplab](https://github.com/rpng/ov_maplab)** -
 This codebase contains the interface wrapper for exporting visual-inertial runs from [OpenVINS](https://github.com/rpng/open_vins) into the ViMap structure taken by [maplab](https://github.com/ethz-asl/maplab).
 The state estimates and raw images are appended to the ViMap as OpenVINS runs through a dataset.
 After completion of the dataset, features are re-extract and triangulate with maplab's feature system.
