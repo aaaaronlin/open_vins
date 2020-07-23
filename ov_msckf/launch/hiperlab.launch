@@ -13,7 +13,7 @@
     <!-- 1: facing -Y direction (lab objects) -->
     <!-- 2: facing -Z direction (down at ground) -->
     <!-- 3: facing Y direction (aruco wall) -->
-    <arg name="cam0_config"    default="0" />
+    <arg name="cam0_config"    default="1" />
 
     <node name="run_serial_msckf" pkg="ov_msckf" type="run_serial_msckf" output="screen">
     
@@ -22,7 +22,7 @@
         <param name="topic_camera0"  type="string" value="/AirSim_CV_Image" />
     
         <!-- bag parameters -->
-        <param name="path_bag"    type="string" value="/home/aaron/Desktop/openvins_data/bag/sin_no_noise_0.bag" />
+        <param name="path_bag"    type="string" value="/home/aaron/Desktop/openvins_data/bag/circle_1.bag" />
         <param name="bag_start"   type="int"    value="0" />
         <param name="bag_durr"    type="int"    value="-1" />
     
@@ -49,10 +49,10 @@
         <!-- sensor noise values / update -->
         <param name="up_msckf_sigma_px"            type="double"   value="1" />
         <param name="up_msckf_chi2_multipler"      type="double"   value="1" />
-        <param name="gyroscope_noise_density"      type="double"   value="0.00" />
-        <param name="gyroscope_random_walk"        type="double"   value="0.00" />
-        <param name="accelerometer_noise_density"  type="double"   value="0.00" />
-        <param name="accelerometer_random_walk"    type="double"   value="0.00" />
+        <param name="gyroscope_noise_density"      type="double"   value="0.007558" />
+        <param name="gyroscope_random_walk"        type="double"   value="0.0" />
+        <param name="accelerometer_noise_density"  type="double"   value="0.004367" />
+        <param name="accelerometer_random_walk"    type="double"   value="0.0" />
 
 	<!-- simulation intrinsics -->
 	<param name="sim_freq_cam"	type="double"	value="30.0" />
@@ -73,7 +73,7 @@
             [
             0.0, 0.0, 1.0, 0.0,
             -1.0, 0.0, 0.0, 0.0,
-            0.0, -1.0, 0.0, -0.1,
+            0.0, -1.0, 0.0, 0.5,
             0.0, 0.0, 0.0, 1.0
             ]
         </rosparam>
@@ -81,7 +81,7 @@
             [
             -1.0, 0.0, 0.0, 0.0,
             0.0, 0.0, -1.0, 0.0,
-            0.0, -1.0, 0.0, -0.1,
+            0.0, -1.0, 0.0, 0.0,
             0.0, 0.0, 0.0, 1.0
             ]
         </rosparam>
@@ -89,7 +89,7 @@
             [
             0.0, -1.0, 0.0, 0.0,
             -1.0, 0.0, 0.0, 0.0,
-            0.0, 0.0, -1.0, -0.1,
+            0.0, 0.0, -1.0, 0.5,
             0.0, 0.0, 0.0, 1.0
             ]
         </rosparam>
@@ -97,7 +97,7 @@
             [
             1.0, 0.0, 0.0, 0.0,
             0.0, 0.0, 1.0, 0.0,
-            0.0, -1.0, 0.0, -0.1,
+            0.0, -1.0, 0.0, 0.5,
             0.0, 0.0, 0.0, 1.0
             ]
         </rosparam>
@@ -114,7 +114,7 @@
             <param name="output"     type="str" value="$(arg path_est)" />
         </node>
     </group>
-    <group if="$(arg dosave)">
+    <group if="$(arg dobag)">
     	<node pkg="rosbag" type="record" name="record" args="-o $(arg path_bag) /ov_msckf/poseimu" />
     </group>
 
