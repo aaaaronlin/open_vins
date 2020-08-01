@@ -114,10 +114,17 @@ if (catkin_FOUND)
     add_executable(run_simulation src/run_simulation.cpp)
     target_link_libraries(run_simulation ov_msckf_lib ${thirdparty_libraries})
 
+    add_executable(run_pc_msckf src/pc_msckf.cpp)
+    target_link_libraries(run_pc_msckf ov_msckf_lib ${thirdparty_libraries})
+
 else()
 
     add_executable(run_simulation src/run_simulation.cpp)
     target_link_libraries(run_simulation ov_msckf_lib ${thirdparty_libraries})
+
+    add_executable(run_pc_msckf src/pc_msckf.cpp)
+    target_link_libraries(run_pc_msckf ov_msckf_lib ${thirdparty_libraries})
+
 
 endif()
 
