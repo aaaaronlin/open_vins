@@ -4,3 +4,6 @@ Build
 *.*~
 .idea
 doxgen_generated
+.cproject
+.project
+.settings/

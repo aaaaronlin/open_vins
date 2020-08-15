@@ -24,7 +24,7 @@
 	<param name="topic_camera1"  type="string" value="/AirSim_CV_Image_1" />
     
         <!-- bag parameters -->
-        <param name="path_bag"    type="string" value="/home/aaron/Desktop/openvins_data/bag/circle_multi.bag" />
+        <param name="path_bag"    type="string" value="/home/aaron/Desktop/openvins_data/bag/sin_1_2.bag" />
         <param name="bag_start"   type="int"    value="0" />
         <param name="bag_durr"    type="int"    value="-1" />
     
