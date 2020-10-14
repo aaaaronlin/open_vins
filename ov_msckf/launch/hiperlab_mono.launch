@@ -20,7 +20,7 @@
     
         <!-- bag topics -->
         <param name="topic_imu"      type="string" value="/imu1" />
-        <param name="topic_camera0"  type="string" value="/AirSim_CV_Image_0" />
+        <param name="topic_camera0"  type="string" value="/AirSim_CV_Image" />
     
         <!-- bag parameters -->
         <param name="path_bag"    type="string" value="/home/aaron/Desktop/openvins_data/bag/circle_2.bag" />
@@ -50,14 +50,10 @@
         <!-- sensor noise values / update -->
         <param name="up_msckf_sigma_px"            type="double"   value="1" />
         <param name="up_msckf_chi2_multipler"      type="double"   value="1" />
-        <param name="gyroscope_noise_density"      type="double"   value="0.007855" />
+        <param name="gyroscope_noise_density"      type="double"   value="0.007955" />
         <param name="gyroscope_random_walk"        type="double"   value="0.0" />
         <param name="accelerometer_noise_density"  type="double"   value="0.004334" />
         <param name="accelerometer_random_walk"    type="double"   value="0.0" />
-
-	<!-- simulation intrinsics -->
-	<param name="sim_freq_cam"	type="double"	value="30.0" />
-	<param name="sim_freq_imu"	type="double"	value="100.0" />
 
         <!-- timing statistics recording -->
         <param name="record_timing_information"   type="bool"   value="$(arg dotime)" />

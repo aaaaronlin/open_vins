@@ -26,11 +26,21 @@
 #include "core/VioManager.h"
 #include "core/VioManagerOptions.h"
 #include "utils/parse_json.h"
+#include "state/State.h"
 
 namespace ov_msckf {
 
 	class PCMSCKF {
+
 	public:
+		struct StateEstimate {
+		    std::vector<float> pos;
+		    std::vector<float> q;
+		    std::vector<float> cov_upper;
+		    Eigen::Matrix<double, 6, 6> cov_full;
+		};
+		StateEstimate get_state();
+
 		PCMSCKF();
 		/* move state forward with imu measurement */
 		void predict_imu(const std::vector<float>& gyro, const std::vector<float>& acc, const float t);
@@ -41,8 +51,15 @@ namespace ov_msckf {
 		/* move state forward with two camera measurements */
 		void update_stereo(const cv::Mat& img0, const cv::Mat& img1, const float t0, const float t1);
 
+		void end_sim();
+
+		VioManagerOptions get_params() {
+			return params;
+		}
+
 	protected:
 		VioManager* sys;
+		VioManagerOptions params;
 
 		double time_buffer;
 		cv::Mat img0_buffer, img1_buffer;

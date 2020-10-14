@@ -25,10 +25,47 @@
 using namespace ov_msckf;
 
 PCMSCKF::PCMSCKF() {
-	VioManagerOptions params = parse_json(); /* json file will go here*/
-	VioManager* sys = new VioManager(params);
-	double time_buffer = -1;
-	cv::Mat img0_buffer, img1_buffer;
+	params = parse_json(); /* json file will go here*/
+	sys = new VioManager(params);
+	time_buffer = 100;
+	struct StateEstimate {
+	    std::vector<float> pos;
+	    std::vector<float> q;
+	    std::vector<float> cov_upper;
+	    Eigen::Matrix<double, 6, 6> cov_full;
+	};
+}
+
+PCMSCKF::StateEstimate PCMSCKF::get_state() {
+	PCMSCKF::StateEstimate est;
+
+	State* s = sys->get_state();
+
+	est.pos.push_back(s->_imu->pos()(0));
+	est.pos.push_back(s->_imu->pos()(1));
+	est.pos.push_back(s->_imu->pos()(2));
+
+	est.q.push_back(s->_imu->quat()(0));
+	est.q.push_back(s->_imu->quat()(1));
+	est.q.push_back(s->_imu->quat()(2));
+	est.q.push_back(s->_imu->quat()(3));
+
+	std::vector<Type*> statevars;
+    statevars.push_back(s->_imu->pose()->p());
+    statevars.push_back(s->_imu->pose()->q());
+
+	est.cov_full = StateHelper::get_marginal_covariance(s,statevars);
+	// only save upper diagonal
+	for (int i = 0; i < 4; i+=3) {
+	    est.cov_upper.push_back(est.cov_full(i, i));
+	    est.cov_upper.push_back(est.cov_full(i, 1 + i));
+	    est.cov_upper.push_back(est.cov_full(i, 2 + i));
+	    est.cov_upper.push_back(est.cov_full(1 + i, 1 + i));
+	    est.cov_upper.push_back(est.cov_full(1 + i, 2 + i));
+	    est.cov_upper.push_back(est.cov_full(2 + i, 2 + i));
+	}
+
+	return est;
 }
 
 void PCMSCKF::predict_imu(const std::vector<float>& gyro, const std::vector<float>& acc, const float t) {
@@ -69,4 +106,8 @@ void PCMSCKF::update_stereo(const cv::Mat& img0, const cv::Mat& img1, const floa
 	img0_buffer = img0.clone();
 	time_buffer = t1;
 	img1_buffer = img1.clone();
+}
+
+void PCMSCKF::end_sim() {
+	delete sys;
 }

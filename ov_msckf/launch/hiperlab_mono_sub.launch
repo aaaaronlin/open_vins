@@ -9,18 +9,21 @@
     <arg name="path_bag"    default="/home/aaron/Desktop/openvins_data/ov_bag/" />
 
     <!-- mono-camera orientation configuration -->
-    <!-- 0: standard video config -->
-    <arg name="cam0_config"    default="1" />
+    <!-- 0: facing X direction (right wall) -->
+    <!-- 1: facing -Y direction (lab objects) -->
+    <!-- 2: facing -Z direction (down at ground) -->
+    <!-- 3: facing Y direction (aruco wall) -->
+    <!-- 4: video orientation -->
+    <arg name="cam0_config"    default="2" />
 
-    <node name="run_serial_msckf" pkg="ov_msckf" type="run_serial_msckf" output="screen">
+    <node name="run_subscribe_msckf" pkg="ov_msckf" type="run_subscribe_msckf" output="screen">
     
         <!-- bag topics -->
         <param name="topic_imu"      type="string" value="/imu1" />
-        <param name="topic_camera0"  type="string" value="/AirSim_CV_Image_0" />
+        <param name="topic_camera0"  type="string" value="/AirSim_CV_Image" />
     
         <!-- bag parameters -->
-        <param name="path_bag"    type="string" value="/home/aaron/Desktop/openvins_data/bag/flightWithCam04_SHM.bag" />
-        <param name="bag_start"   type="int"    value="6" />
+        <param name="bag_start"   type="int"    value="0" />
         <param name="bag_durr"    type="int"    value="-1" />
     
         <!-- world/filter parameters -->
@@ -30,7 +33,7 @@
         <param name="max_msckf_in_update"    type="int"    value="999" />
         <param name="max_cameras"            type="int"    value="1" />
         <param name="init_window_time"       type="double" value="0.5" />
-        <param name="init_imu_thresh"        type="double" value="0.15" />
+        <param name="init_imu_thresh"        type="double" value="0.12" />
         <rosparam param="gravity">[0.0,0.0,9.81]</rosparam>
         <param name="feat_rep_msckf"         type="string" value="GLOBAL_3D" />
         <param name="feat_rep_slam"          type="string" value="GLOBAL_3D" />
@@ -46,10 +49,10 @@
         <!-- sensor noise values / update -->
         <param name="up_msckf_sigma_px"            type="double"   value="1" />
         <param name="up_msckf_chi2_multipler"      type="double"   value="1" />
-        <param name="gyroscope_noise_density"      type="double"   value="0.0109" />
-        <param name="gyroscope_random_walk"        type="double"   value="0.0019" />
-        <param name="accelerometer_noise_density"  type="double"   value="0.01501" />
-        <param name="accelerometer_random_walk"    type="double"   value="0.00214" />
+        <param name="gyroscope_noise_density"      type="double"   value="0.007955" />
+        <param name="gyroscope_random_walk"        type="double"   value="0.0" />
+        <param name="accelerometer_noise_density"  type="double"   value="0.004334" />
+        <param name="accelerometer_random_walk"    type="double"   value="0.0" />
 
 	<!-- simulation intrinsics -->
 	<param name="sim_freq_cam"	type="double"	value="30.0" />
@@ -62,24 +65,47 @@
         <!-- camera intrinsics -->
         <param name="cam0_is_fisheye" type="bool" value="false" />
 	<rosparam param="cam0_wh">[640, 480]</rosparam>
-	<!-- focal length x, focal length y, center x, center y: focal = x/2*tan(FOVx/2) -->
-        <rosparam param="cam0_k">[185, 185, 320, 240]</rosparam>
-        <rosparam param="cam0_d">[-0.1968,0.0412, 0.0015, -0.0014]</rosparam>
+        <rosparam param="cam0_k">[320.0,320.0,320.0,240.0]</rosparam>
+        <rosparam param="cam0_d">[0.0,0.0,0.0,0.0]</rosparam>
 
         <!-- camera extrinsics follow cv coordinate frame -->
         <rosparam param="T_C0toI" if="$(eval arg('cam0_config') == 0)">
             [
-            0.1642, -0.9699, 0.1799, 0.0355,
-            -0.2577, 0.1339, 0.9569, 0.0617,
-            -0.9521, -0.2035, -0.2279, 0.2831,
+            0.0, 0.0, 1.0, 0.0,
+            -1.0, 0.0, 0.0, 0.0,
+            0.0, -1.0, 0.0, 0.5,
             0.0, 0.0, 0.0, 1.0
             ]
         </rosparam>
-        <rosparam param="T_C0toI" if="$(eval arg('cam0_config') == 1)">
+	<rosparam param="T_C0toI" if="$(eval arg('cam0_config') == 1)">
+            [
+            -1.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, -1.0, 0.0,
+            0.0, -1.0, 0.0, 0.5,
+            0.0, 0.0, 0.0, 1.0
+            ]
+        </rosparam>
+	<rosparam param="T_C0toI" if="$(eval arg('cam0_config') == 2)">
             [
             0.0, -1.0, 0.0, 0.0,
-            0.0, 0.0, 1.0, 0.0,
             -1.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, -1.0, 0.5,
+            0.0, 0.0, 0.0, 1.0
+            ]
+        </rosparam>
+        <rosparam param="T_C0toI" if="$(eval arg('cam0_config') == 3)">
+            [
+            1.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 1.0, 0.0,
+            0.0, -1.0, 0.0, 0.5,
+            0.0, 0.0, 0.0, 1.0
+            ]
+        </rosparam>
+        <rosparam param="T_C0toI" if="$(eval arg('cam0_config') == 4)">
+            [
+            0.0, 0.0, 1.0, 0.0,
+            1.0, 0.0, 0.0, 0.0,
+            0.0, 1.0, 0.0, 0.5,
             0.0, 0.0, 0.0, 1.0
             ]
         </rosparam>
