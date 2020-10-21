@@ -14,16 +14,16 @@
     <!-- 2: facing -Z direction (down at ground) -->
     <!-- 3: facing Y direction (aruco wall) -->
     <!-- 4: video orientation -->
-    <arg name="cam0_config"    default="2" />
+    <arg name="cam0_config"    default="1" />
 
     <node name="run_serial_msckf" pkg="ov_msckf" type="run_serial_msckf" output="screen">
     
         <!-- bag topics -->
         <param name="topic_imu"      type="string" value="/imu1" />
-        <param name="topic_camera0"  type="string" value="/AirSim_CV_Image" />
+        <param name="topic_camera0"  type="string" value="/AirSim_CV_Image_0" />
     
         <!-- bag parameters -->
-        <param name="path_bag"    type="string" value="/home/aaron/Desktop/openvins_data/bag/circle_2.bag" />
+        <param name="path_bag"    type="string" value="/home/aaron/Desktop/openvins_data/bag/circle_1.bag" />
         <param name="bag_start"   type="int"    value="0" />
         <param name="bag_durr"    type="int"    value="-1" />
     
