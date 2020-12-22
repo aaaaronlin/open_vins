@@ -30,25 +30,34 @@ PCMSCKF::PCMSCKF() {
 	time_buffer = 100;
 	struct StateEstimate {
 	    std::vector<float> pos;
+	    std::vector<float> vel;
 	    std::vector<float> q;
 	    std::vector<float> cov_upper;
 	    Eigen::Matrix<double, 6, 6> cov_full;
 	};
 }
 
-PCMSCKF::StateEstimate PCMSCKF::get_state() {
+PCMSCKF::StateEstimate PCMSCKF::get_state(const float t) {
 	PCMSCKF::StateEstimate est;
 
 	State* s = sys->get_state();
+	Propagator* p = sys->get_propagator();
 
-	est.pos.push_back(s->_imu->pos()(0));
-	est.pos.push_back(s->_imu->pos()(1));
-	est.pos.push_back(s->_imu->pos()(2));
+	Eigen::Matrix<double, 13, 1> state_plus;
+	p->fast_state_propagate(s, t, state_plus);
 
-	est.q.push_back(s->_imu->quat()(0));
-	est.q.push_back(s->_imu->quat()(1));
-	est.q.push_back(s->_imu->quat()(2));
-	est.q.push_back(s->_imu->quat()(3));
+	est.pos.push_back(state_plus(0));
+	est.pos.push_back(state_plus(1));
+	est.pos.push_back(state_plus(2));
+
+	est.vel.push_back(state_plus(3));
+	est.vel.push_back(state_plus(4));
+	est.vel.push_back(state_plus(5));
+
+	est.q.push_back(state_plus(6));
+	est.q.push_back(state_plus(7));
+	est.q.push_back(state_plus(8));
+	est.q.push_back(state_plus(9));
 
 	std::vector<Type*> statevars;
     statevars.push_back(s->_imu->pose()->p());

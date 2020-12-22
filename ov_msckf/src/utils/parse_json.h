@@ -57,7 +57,7 @@ VioManagerOptions parse_json() {
   params.try_zupt = false;
   params.zupt_options.chi2_multipler = 1;
   params.zupt_max_velocity = 0.25;
-  params.zupt_noise_multiplier = 10;
+  params.zupt_noise_multiplier = 1;
 
   // IMU Parameters
   params.msckf_options.sigma_pix = j["SensorParameters"].value(
@@ -76,8 +76,7 @@ VioManagerOptions parse_json() {
       "accelerometer_random_walk", 0.0);
 
   // Camera Parameters
-  params.state_options.num_cameras = j["CameraParameters"].value("num_cameras",
-                                                                 1);
+  params.state_options.num_cameras = j["CameraParameters"].value("num_cameras",1);
   for (int i = 0; i < params.state_options.num_cameras; i++) {
     bool is_fisheye = j["CameraParameters"].value(
         "cam" + std::to_string(i) + "_is_fisheye", false);

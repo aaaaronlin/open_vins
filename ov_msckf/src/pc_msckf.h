@@ -35,11 +35,12 @@ namespace ov_msckf {
 	public:
 		struct StateEstimate {
 		    std::vector<float> pos;
+		    std::vector<float> vel;
 		    std::vector<float> q;
 		    std::vector<float> cov_upper;
 		    Eigen::Matrix<double, 6, 6> cov_full;
 		};
-		StateEstimate get_state();
+		StateEstimate get_state(const float t);
 
 		PCMSCKF();
 		/* move state forward with imu measurement */

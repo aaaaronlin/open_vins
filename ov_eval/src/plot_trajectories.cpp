@@ -82,6 +82,26 @@ void plot_position(const std::string &name, const std::string &color, const std:
 
 }
 
+// Will plot the 3d vel of the pose trajectories
+void plot_vel(const std::string &name, const std::string &color, const std::vector<double> &times, const std::vector<Eigen::Matrix<double,3,1>> &vel, const int &axis) {
+
+    // Paramters for our line
+    std::map<std::string, std::string> params;
+    params.insert({"label", name});
+    params.insert({"linestyle", "-"});
+    params.insert({"color", color});
+
+    // Create vectors of our x and y axis
+    std::vector<double> time, vel_axis;
+    for(size_t i=0; i<vel.size(); i++) {
+        time.push_back(times.at(i));
+        vel_axis.push_back(vel.at(i)(axis));
+    }
+
+    // Finally plot
+    matplotlibcpp::plot(time, vel_axis, params);
+
+}
 
 // Will plot the 3d position of the pose trajectories
 void plot_euler(const std::string &name, const std::string &color, const std::vector<double> &times, const std::vector<Eigen::Matrix<double,3,1>> &angles, const int &axis) {
@@ -175,6 +195,7 @@ int main(int argc, char **argv) {
   std::vector<std::string> names;
   std::vector<std::vector<double>> times;
   std::vector<std::vector<Eigen::Matrix<double, 7, 1>>> poses;
+  std::vector<std::vector<Eigen::Matrix<double, 3, 1>>> vel;
   std::vector<std::vector<Eigen::Matrix3d>> cov_ori, cov_pos;
 
   for (int i = 2; i < argc; i++) {
@@ -182,8 +203,9 @@ int main(int argc, char **argv) {
     // Read in trajectory data
     std::vector<double> times_temp;
     std::vector<Eigen::Matrix<double, 7, 1>> poses_temp;
+    std::vector<Eigen::Matrix<double, 3, 1>> vel_temp;
     std::vector<Eigen::Matrix3d> cov_ori_temp, cov_pos_temp;
-    ov_eval::Loader::load_data(argv[i], times_temp, poses_temp, cov_ori_temp,
+    ov_eval::Loader::load_data(argv[i], times_temp, poses_temp, vel_temp, cov_ori_temp,
                                cov_pos_temp);
 
     // Align all the non-groundtruth trajectories to the base one
@@ -247,6 +269,7 @@ int main(int argc, char **argv) {
     names.push_back(name);
     times.push_back(times_temp);
     poses.push_back(poses_temp);
+    vel.push_back(vel_temp);
 
     cov_ori.push_back(cov_ori_temp);
     cov_pos.push_back(cov_pos_temp);
@@ -285,6 +308,22 @@ int main(int argc, char **argv) {
         matplotlibcpp::ylabel(axis.at(j) + "-axis (m)");
         matplotlibcpp::xlim(0.0, endtime - starttime);
         matplotlibcpp::legend();
+    }
+
+    // Plot this figure
+    matplotlibcpp::figure_size(1000, 1200);
+
+    for (int j=0; j<3; j++) {
+        matplotlibcpp::subplot(3, 1, j+1);
+        for (size_t i = 0; i < times.size(); i++) {
+            plot_vel(names.at(i), colors.at(i), times.at(i), vel.at(i), j);
+        }
+
+        matplotlibcpp::xlabel("timestamp (sec)");
+        matplotlibcpp::ylabel("vel_" + axis.at(j) + "-axis (m)");
+        matplotlibcpp::xlim(0.0, endtime - starttime);
+        matplotlibcpp::legend();
+
     }
 
     // Convert Quat to  Euler Angles

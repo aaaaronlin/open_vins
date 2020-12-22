@@ -53,6 +53,9 @@ namespace ov_eval {
         static void load_data(std::string path_traj,
                               std::vector<double> &times, std::vector<Eigen::Matrix<double,7,1>> &poses,
                               std::vector<Eigen::Matrix3d> &cov_ori, std::vector<Eigen::Matrix3d> &cov_pos);
+        static void load_data(std::string path_traj,
+                              std::vector<double> &times, std::vector<Eigen::Matrix<double,7,1>> &poses, std::vector<Eigen::Matrix<double,3,1>> &vel,
+                              std::vector<Eigen::Matrix3d> &cov_ori, std::vector<Eigen::Matrix3d> &cov_pos);
 
         /**
          * @brief Load an arbitrary sized row of *space* separated values, used for our simulation
