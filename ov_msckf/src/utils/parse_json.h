@@ -1,6 +1,6 @@
 //
 // Created by aaron on 8/1/20.
-//
+// Not all parameters are currently implemented, but can be added following parse_ros.h
 
 #ifndef OPEN_VINS_PARSE_JSON_H
 #define OPEN_VINS_PARSE_JSON_H
@@ -9,12 +9,12 @@
 #include <core/VioManagerOptions.h>
 
 namespace ov_msckf {
-VioManagerOptions parse_json() {
+VioManagerOptions parse_json(string fname) {
 
   // json setup
   using json = nlohmann::json;
   json j;
-  std::ifstream ifs("/home/aaron/Documents/OpenVins/settings.json");
+  std::ifstream ifs(fname);
   if (ifs.is_open()) {
     ifs >> j;
     ifs.close();

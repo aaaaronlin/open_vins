@@ -31,6 +31,24 @@ Please take a look at the feature list below for full details on what the system
 * **August 15, 2019** - Initial release of OpenVINS repository and documentation website! 
 
 
+## HiPeRLab: Integration with PC-Apps
+OpenVINS is built on ROS. Though ROS-free builds are [supported](https://docs.openvins.com/gs-installing.html), the amount of support is very limited.
+
+Typically, OpenVINS is run using a launch file with multiple estimation parameters (camera intrinsics, tracking/extractor, initialization, etc.)
+
+To integrate with PC-Apps, the non-ROS simulator, the PCMSCKF class has been added:
+* ov_msckf/src/pc_msckf.cpp
+* ov_msckf/src/pc_msckf.h
+
+A script that reads parameters from a json file, rather than a launch file, has also been added:
+* ov_msckf/src/utils/parse_json.h
+
+This is working with OpenVINS v2.2. Large developments have been made with v2.3, and the PCMSCKF will need to be adjusted.
+See the PC-Apps readme for more information on using OpenVINS/AirSim for visual-inertial simulation.
+
+Other additions
+* Velocity and covariance uncertainties added to [evaluation tools](https://docs.openvins.com/eval-error.html)
+
 ## Project Features
 
 

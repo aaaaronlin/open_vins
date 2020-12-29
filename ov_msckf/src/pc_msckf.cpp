@@ -25,7 +25,7 @@
 using namespace ov_msckf;
 
 PCMSCKF::PCMSCKF() {
-	params = parse_json(); /* json file will go here*/
+	params = parse_json("/home/aaron/Documents/OpenVins/settings.json"); /* json file will go here*/
 	sys = new VioManager(params);
 	time_buffer = 100;
 	struct StateEstimate {

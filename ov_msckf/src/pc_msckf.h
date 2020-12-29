@@ -37,7 +37,9 @@ namespace ov_msckf {
 		    std::vector<float> pos;
 		    std::vector<float> vel;
 		    std::vector<float> q;
+		    /* upper diagonal */
 		    std::vector<float> cov_upper;
+		    /* position and attitude */
 		    Eigen::Matrix<double, 6, 6> cov_full;
 		};
 		StateEstimate get_state(const float t);
@@ -53,7 +55,7 @@ namespace ov_msckf {
 		void update_stereo(const cv::Mat& img0, const cv::Mat& img1, const float t0, const float t1);
 
 		void end_sim();
-
+		/* return params which contains information from json file */
 		VioManagerOptions get_params() {
 			return params;
 		}
