@@ -47,7 +47,7 @@ void Loader::load_data(std::string path_traj,
         int i = 0;
         std::istringstream s(current_line);
         std::string field;
-        Eigen::Matrix<double,20,1> data;
+        Eigen::Matrix<double,23,1> data;
 
         // Loop through this line (timestamp(s) tx ty tz qx qy qz qw Pr11 Pr12 Pr13 Pr22 Pr23 Pr33 Pt11 Pt12 Pt13 Pt22 Pt23 Pt33)
         while(std::getline(s,field,' ')) {
@@ -58,10 +58,28 @@ void Loader::load_data(std::string path_traj,
             data(i) = std::atof(field.c_str());
             i++;
         }
-
-        // Only a valid line if we have all the parameters
-        if(i >= 20) {
+        // in case we also have velocity
+        if (i >= 23) {
             // time and pose
+            times.push_back(data(0));
+        	Eigen::Matrix<double, 7, 1> pos;
+        	pos.block(0,0,3,1) = data.block(1,0,3,1);
+        	pos.block(3,0,4,1) = data.block(7,0,4,1);
+        	poses.push_back(pos);
+            // covariance values
+            Eigen::Matrix3d c_ori, c_pos;
+            c_ori << data(11),data(12),data(13),
+                    data(12),data(14),data(15),
+                    data(13),data(15),data(16);
+            c_pos << data(17),data(18),data(19),
+                    data(18),data(20),data(21),
+                    data(19),data(21),data(22);
+            c_ori = 0.5*(c_ori+c_ori.transpose());
+            c_pos = 0.5*(c_pos+c_pos.transpose());
+            cov_ori.push_back(c_ori);
+            cov_pos.push_back(c_pos);
+        } else if (i >= 20) {
+            // time and pose only
             times.push_back(data(0));
             poses.push_back(data.block(1,0,7,1));
             // covariance values
@@ -76,7 +94,13 @@ void Loader::load_data(std::string path_traj,
             c_pos = 0.5*(c_pos+c_pos.transpose());
             cov_ori.push_back(c_ori);
             cov_pos.push_back(c_pos);
-        } else if(i >= 8) {
+        } else if (i >= 11) {
+        	times.push_back(data(0));
+        	Eigen::Matrix<double, 7, 1> pos;
+        	pos.block(0,0,3,1) = data.block(1,0,3,1);
+        	pos.block(3,0,4,1) = data.block(7,0,4,1);
+        	poses.push_back(pos);
+        } else if (i >= 8) {
             times.push_back(data(0));
             poses.push_back(data.block(1,0,7,1));
         }
@@ -150,7 +174,7 @@ void Loader::load_data(std::string path_traj,
         }
 
         // Only a valid line if we have all the parameters
-        if(i >= 20) {
+        if(i >= 23) {
             // time and pose
             times.push_back(data(0));
         	Eigen::Matrix<double, 7, 1> pos;
@@ -170,7 +194,7 @@ void Loader::load_data(std::string path_traj,
             c_pos = 0.5*(c_pos+c_pos.transpose());
             cov_ori.push_back(c_ori);
             cov_pos.push_back(c_pos);
-        } else if(i >= 8) {
+        } else if(i >= 11) {
             times.push_back(data(0));
         	Eigen::Matrix<double, 7, 1> pos;
         	pos.block(0,0,3,1) = data.block(1,0,3,1);
