@@ -18,23 +18,22 @@ Please take a look at the feature list below for full details on what the system
 
 
 ## HiPeRLab: Integration with PC-Apps
-OpenVINS is built on ROS. OpenVINS runs using a launch file with multiple estimation parameters (camera intrinsics, tracking/extractor, initialization, etc.) and IMU/camera measurements are published to the correct ROS topics either in real-time or through a bag file. This has not been tested within the lab (since 1/2/2021).
+OpenVINS is built on ROS. OpenVINS runs using a launch file with multiple estimation parameters (camera intrinsics, tracking/extractor, initialization, etc.) and IMU/camera measurements are published to the correct ROS topics either in real-time or through a bag file. Performance has not been tested on lab quadrotors (since 1/2/2021).
 
 Though ROS-free builds are [supported](https://docs.openvins.com/gs-installing.html), the amount of support is very limited. To integrate with non-ROS simulators (e.g. PC-Apps), the PCMSCKF class has been added, which exposes the necessary OpenVINS functions without the need for ROS:
-* ov_msckf/src/pc_msckf.cpp
-* ov_msckf/src/pc_msckf.h
+* [ov_msckf/src/pc_msckf.cpp](https://github.com/muellerlab/open_vins/blob/master/ov_msckf/src/pc_msckf.cpp)
+* [ov_msckf/src/pc_msckf.h](https://github.com/muellerlab/open_vins/blob/master/ov_msckf/src/pc_msckf.h)
 
 A script that reads parameters from a json file, rather than a launch file, has also been added:
-* ov_msckf/src/utils/parse_json.h
-* ov_msckf/src/utils/json.hpp
-with an example json file:
-* settings.json
+* [ov_msckf/src/utils/parse_json.h](https://github.com/muellerlab/open_vins/blob/master/ov_msckf/src/utils/parse_json.h)
+* [ov_msckf/src/utils/json.hpp](https://github.com/muellerlab/open_vins/blob/master/ov_msckf/src/utils/json.hpp)
+* [settings.json](https://github.com/muellerlab/open_vins/blob/master/settings.json) (example settings, set path in pc_msckf.cpp)
 
 Other additions
 * Velocity and covariance uncertainties support added to plot_trajectories in [evaluation tools](https://docs.openvins.com/eval-error.html).
 	* Clean and process the csv file (e.g. Gnumeric) and save as space-delimited text file. All non-data rows need a pound (#) as indication.
 	* Make sure the quaternion convention has the vector element in first three columns for both ground-truth and estimate.
-	* Example files are provided in this repository in /example_eval.
+	* Example files are provided the ~/example_eval folder.
 
 ```
 rosrun ov_eval plot_trajectories none test_run1_est.txt truth/test_run1.txt
