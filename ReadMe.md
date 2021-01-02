@@ -17,29 +17,16 @@ Please take a look at the feature list below for full details on what the system
 * Publication reference - http://udel.edu/~pgeneva/downloads/papers/c10.pdf
 
 
-## News / Events
-
-* **July 7, 2020** - Released zero velocity update for vehicle applications and direct initialization when standing still. See [PR#79](https://github.com/rpng/open_vins/pull/79) for details. 
-* **May 18, 2020** - Released secondary pose graph example repository [ov_secondary](https://github.com/rpng/ov_secondary) based on [VINS-Fusion](https://github.com/HKUST-Aerial-Robotics/VINS-Fusion). OpenVINS now publishes marginalized feature track, feature 3d position, and first camera intrinsics and extrinsics. See [PR#66](https://github.com/rpng/open_vins/pull/66) for details and discussion.
-* **April 3, 2020** - Released [v2.0](https://github.com/rpng/open_vins/releases/tag/v2.0) update to the codebase with some key refactoring, ros-free building, improved dataset support, and single inverse depth feature representation. Please check out the [release page](https://github.com/rpng/open_vins/releases/tag/v2.0) for details.
-* **January 21, 2020** - Our paper has been accepted for presentation in [ICRA 2020](https://www.icra2020.org/). We look forward to seeing everybody there! We have also added links to a few videos of the system running on different datasets.
-* **October 23, 2019** - OpenVINS placed first in the [IROS 2019 FPV Drone Racing VIO Competition
-](http://rpg.ifi.uzh.ch/uzh-fpv.html). We will be giving a short presentation at the [workshop](https://wp.nyu.edu/workshopiros2019mav/) at 12:45pm in Macau on November 8th.
-* **October 1, 2019** - We will be presenting at the [Visual-Inertial Navigation: Challenges and Applications
-](http://udel.edu/~ghuang/iros19-vins-workshop/index.html) workshop at [IROS 2019](https://www.iros2019.org/). The submitted workshop paper can be found at [this](http://udel.edu/~ghuang/iros19-vins-workshop/papers/06.pdf) link.
-* **August 21, 2019** - Open sourced [ov_maplab](https://github.com/rpng/ov_maplab) for interfacing OpenVINS with the [maplab](https://github.com/ethz-asl/maplab) library.
-* **August 15, 2019** - Initial release of OpenVINS repository and documentation website! 
-
-
 ## HiPeRLab: Integration with PC-Apps
-OpenVINS is built on ROS. Though ROS-free builds are [supported](https://docs.openvins.com/gs-installing.html), the amount of support is very limited. Typically, OpenVINS is run using a launch file with multiple estimation parameters (camera intrinsics, tracking/extractor, initialization, etc.) and IMU/camera measurements are published to the correct topics.
+OpenVINS is built on ROS. OpenVINS runs using a launch file with multiple estimation parameters (camera intrinsics, tracking/extractor, initialization, etc.) and IMU/camera measurements are published to the correct ROS topics either in real-time or through a bag file. This has not been tested within the lab (since 1/2/2021).
 
-To integrate with non-ROS simulators (e.g. PC-Apps), the PCMSCKF class has been added:
+Though ROS-free builds are [supported](https://docs.openvins.com/gs-installing.html), the amount of support is very limited. To integrate with non-ROS simulators (e.g. PC-Apps), the PCMSCKF class has been added, which exposes the necessary OpenVINS functions without the need for ROS:
 * ov_msckf/src/pc_msckf.cpp
 * ov_msckf/src/pc_msckf.h
 
 A script that reads parameters from a json file, rather than a launch file, has also been added:
 * ov_msckf/src/utils/parse_json.h
+* ov_msckf/src/utils/json.hpp
 with an example json file:
 * settings.json
 
@@ -54,7 +41,21 @@ rosrun ov_eval plot_trajectories none test_run1_est.txt truth/test_run1.txt
 rosrun ov_eval error_singlerun none test_run1_est.txt truth/test_run1.txt
 ```
 
-These additions are working with OpenVINS v2.2. Large developments have been made with v2.3, and the PCMSCKF will need to be adjusted. Please see the PC-Apps Readme for details on setup and integration with AirSim and PC-Apps.
+These additions are working with OpenVINS v2.2. Large developments have been made with v2.3, and the PCMSCKF will need to be adjusted. Please see the PC-Apps Readme for details on installation and integration with AirSim and PC-Apps.
+
+
+## News / Events
+
+* **July 7, 2020** - Released zero velocity update for vehicle applications and direct initialization when standing still. See [PR#79](https://github.com/rpng/open_vins/pull/79) for details. 
+* **May 18, 2020** - Released secondary pose graph example repository [ov_secondary](https://github.com/rpng/ov_secondary) based on [VINS-Fusion](https://github.com/HKUST-Aerial-Robotics/VINS-Fusion). OpenVINS now publishes marginalized feature track, feature 3d position, and first camera intrinsics and extrinsics. See [PR#66](https://github.com/rpng/open_vins/pull/66) for details and discussion.
+* **April 3, 2020** - Released [v2.0](https://github.com/rpng/open_vins/releases/tag/v2.0) update to the codebase with some key refactoring, ros-free building, improved dataset support, and single inverse depth feature representation. Please check out the [release page](https://github.com/rpng/open_vins/releases/tag/v2.0) for details.
+* **January 21, 2020** - Our paper has been accepted for presentation in [ICRA 2020](https://www.icra2020.org/). We look forward to seeing everybody there! We have also added links to a few videos of the system running on different datasets.
+* **October 23, 2019** - OpenVINS placed first in the [IROS 2019 FPV Drone Racing VIO Competition
+](http://rpg.ifi.uzh.ch/uzh-fpv.html). We will be giving a short presentation at the [workshop](https://wp.nyu.edu/workshopiros2019mav/) at 12:45pm in Macau on November 8th.
+* **October 1, 2019** - We will be presenting at the [Visual-Inertial Navigation: Challenges and Applications
+](http://udel.edu/~ghuang/iros19-vins-workshop/index.html) workshop at [IROS 2019](https://www.iros2019.org/). The submitted workshop paper can be found at [this](http://udel.edu/~ghuang/iros19-vins-workshop/papers/06.pdf) link.
+* **August 21, 2019** - Open sourced [ov_maplab](https://github.com/rpng/ov_maplab) for interfacing OpenVINS with the [maplab](https://github.com/ethz-asl/maplab) library.
+* **August 15, 2019** - Initial release of OpenVINS repository and documentation website! 
 
 ## Project Features
 
